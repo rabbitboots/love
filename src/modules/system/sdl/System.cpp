@@ -85,6 +85,14 @@ std::string System::getClipboardText() const
 	return text;
 }
 
+bool System::hasClipboardText() const
+{
+	if (!isWindowOpen())
+		throw love::Exception("A window must be created in order for hasClipboardText to function properly.");
+
+	return SDL_HasClipboardText();
+}
+
 love::system::System::PowerState System::getPowerInfo(int &seconds, int &percent) const
 {
 	SDL_PowerState sdlstate = SDL_GetPowerInfo(&seconds, &percent);
