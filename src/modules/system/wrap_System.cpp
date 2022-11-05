@@ -56,6 +56,12 @@ int w_getClipboardText(lua_State *L)
 	return 1;
 }
 
+int w_hasClipboardText(lua_State *L)
+{
+	lua_pushboolean(L, instance()->hasClipboardText());
+	return 1;
+}
+
 int w_getPowerInfo(lua_State *L)
 {
 	int seconds = -1, percent = -1;
@@ -123,6 +129,7 @@ static const luaL_Reg functions[] =
 	{ "getProcessorCount", w_getProcessorCount },
 	{ "setClipboardText", w_setClipboardText },
 	{ "getClipboardText", w_getClipboardText },
+	{ "hasClipboardText", w_hasClipboardText },
 	{ "getPowerInfo", w_getPowerInfo },
 	{ "openURL", w_openURL },
 	{ "vibrate", w_vibrate },
