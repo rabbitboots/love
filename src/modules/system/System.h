@@ -78,6 +78,11 @@ public:
 	virtual std::string getClipboardText() const = 0;
 
 	/**
+	 * Checks if the clipboard has usable text.
+	 **/
+	virtual bool hasClipboardText() const = 0;
+
+	/**
 	 * Gets information about the system's power supply.
 	 *
 	 * @param[out] seconds Time in seconds of battery life left.
