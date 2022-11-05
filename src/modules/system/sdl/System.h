@@ -49,6 +49,7 @@ public:
 
 	void setClipboardText(const std::string &text) const override;
 	std::string getClipboardText() const override;
+	bool hasClipboardText() const;
 
 	PowerState getPowerInfo(int &seconds, int &percent) const override;
 	std::vector<std::string> getPreferredLocales() const override;
