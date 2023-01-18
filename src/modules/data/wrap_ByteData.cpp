@@ -21,6 +21,12 @@
 #include "wrap_ByteData.h"
 #include "wrap_Data.h"
 
+// Lua 5.3
+#include "libraries/lua53/lstrlib.h"
+
+// C
+#include <string.h>
+
 namespace love
 {
 namespace data
@@ -41,9 +47,30 @@ int w_ByteData_clone(lua_State *L)
 	return 1;
 }
 
+int w_ByteData_pack(lua_State *L)
+{
+	ByteData *t = luax_checkbytedata(L, 1);
+	const char *fmt = luaL_checkstring(L, 2);
+	int offset = (int) luaL_checkinteger(L, 3) - 1;
+
+	if (offset < 0)
+		return luaL_error(L, "bad argument #2 to 'ByteData:pack' (initial position out of range)");
+
+	luaL_Buffer_53 b;
+	lua53_str_pack(L, fmt, 4, &b);
+
+	if (offset + b.nelems > t->getSize())
+		return luaL_error(L, "Packed data doesn't fit into source ByteData.");
+
+	memcpy( (uint8 *) t->getData() + offset, b.ptr, b.nelems);
+
+	return 0;
+}
+	
 static const luaL_Reg w_ByteData_functions[] =
 {
 	{ "clone", w_ByteData_clone },
+	{ "pack", w_ByteData_pack },
 	{ 0, 0 }
 };
 
