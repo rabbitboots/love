@@ -128,6 +128,31 @@ int w_Font_getWrap(lua_State *L)
 	return 2;
 }
 
+int w_Font_getDimensions(lua_State *L)
+{
+	Font *t = luax_checkfont(L, 1);
+
+	std::vector<love::font::ColoredString> text;
+	luax_checkcoloredstring(L, 2, text);
+
+	float wrap = (float) luaL_checknumber(L, 3);
+	int max_width = 0;
+	std::vector<std::string> lines;
+	std::vector<int> widths;
+
+	luax_catchexcept(L, [&]() { t->getWrap(text, wrap, lines, &widths); });
+
+	for (int width : widths)
+		max_width = std::max(max_width, width);
+
+	lua_pushinteger(L, max_width);
+	lua_pushinteger(L, lines.size() * t->getHeight() * t->getLineHeight());
+	lua_pushinteger(L, lines.size());
+	/* Text height can be calculated by multiplying the line count by `Font:getHeight() * Font:getLineHeight()`. */
+
+	return 3;
+}
+
 int w_Font_setLineHeight(lua_State *L)
 {
 	Font *t = luax_checkfont(L, 1);
@@ -269,6 +294,7 @@ static const luaL_Reg w_Font_functions[] =
 	{ "getHeight", w_Font_getHeight },
 	{ "getWidth", w_Font_getWidth },
 	{ "getWrap", w_Font_getWrap },
+	{ "getDimensions", w_Font_getDimensions },
 	{ "setLineHeight", w_Font_setLineHeight },
 	{ "getLineHeight", w_Font_getLineHeight },
 	{ "setFilter", w_Font_setFilter },
