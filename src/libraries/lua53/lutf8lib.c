@@ -78,7 +78,7 @@ static const char *utf8_decode (const char *o, int *val) {
       c <<= 1;  /* to test next bit */
     }
     res |= ((c & 0x7F) << (count * 5));  /* add first byte */
-    if (count > 3 || res > MAXUNICODE || res <= limits[count])
+    if (count > 3 || res > MAXUNICODE || res <= limits[count] || (0xD800 <= res && res <= 0xDFFF))
       return NULL;  /* invalid byte sequence */
     s += count;  /* skip continuation bytes read */
   }
